@@ -1,7 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, FlatList,SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native";
 import React, { useState, Component } from "react";
 import Header from "./components/Header";
+import Task from "./components/Tasks";
+import AddTask from "./components/AddTask";
+import { v4 as uuidv4 } from "uuid";
 
 export default function App() {
   const [tasks, setTasks] = useState([
@@ -15,15 +18,21 @@ export default function App() {
     { task: "JS", done: false, id: "8" },
     { task: "TypeScript", done: false, id: "9" },
   ]);
+  const addTask = (text) => {
+    setTasks((prevTasks) => {
+      return [{ task: text, id: uuidv4() }, ...prevTasks];
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
       <Header />
       <View style={styles.content}>
+        <AddTask addTask={addTask} />
         <FlatList
           style={styles.listStyle}
+          showsVerticalScrollIndicator={false}
           data={tasks}
-          renderItem={({ item }) => <Text>{item.task}</Text>}
+          renderItem={({ item }) => <Task item={item} />}
         />
       </View>
     </SafeAreaView>
